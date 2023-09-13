@@ -1,0 +1,1304 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Admin</title>
+    <!-- Link to Bootstrap CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css"
+    />
+    <!-- Link to Bootstrap Icons CSS -->
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons/font/bootstrap-icons.css"
+      rel="stylesheet"
+    />
+    <!-- Include jQuery library -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+      .navbar {
+        margin-bottom: 30px;
+      }
+      .footer {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background-color: #343a40;
+        color: white;
+        text-align: center;
+        padding: 10px 0;
+      }
+      .content {
+        margin-bottom: 60px; /* Add space for the footer */
+      }
+
+      /* ส่วนของตาราง */
+      .table {
+        width: 100%;
+        border-collapse: collapse;
+        border-color: pink;
+        margin-bottom: 20px;
+      }
+
+      .table th {
+        background-color: rgb(252, 149, 166);
+        border-color: pink;
+        color: white;
+        padding: 10px;
+        text-align: center;
+        vertical-align: middle;
+      }
+      .table td {
+        padding: 10px;
+        text-align: center;
+        vertical-align: middle;
+      }
+
+      thead th {
+        position: -webkit-sticky;
+        position: sticky;
+        top: 0;
+        background-color: #f2f2f2; /* สีพื้นหลังของหัวตาราง */
+        z-index: 2; /* แสดงหัวตารางเหนือข้อมูล */
+      }
+
+      .btn-custom {
+        background-color: #3498db; /* Initial button color (blue) */
+        color: white; /* Text color (white) */
+      }
+
+      /* Change the button color on hover */
+      .btn-custom:hover {
+        background-color: #00558d; /* Hover color (pink) */
+        color: white; /* Text color (white) */
+      }
+
+      .custom-input-style {
+        border: 2px solid #00558d; /* สีขอบ Input */
+        border-radius: 5px; /* ขอบมนเวียน */
+        padding: 8px 12px; /* ระยะห่างภายใน Input */
+        font-size: 16px; /* ขนาดตัวอักษร */
+        color: #3498db; /* สีตัวอักษร */
+      }
+
+      .custom-input-style:focus {
+        outline: none; /* ลบเส้นขอบเมื่อโฟกัส Input */
+        /* border-color: #ff6b6b; /* เปลี่ยนสีขอบ Input เมื่อโฟกัส */
+      }
+      #toTopButton {
+        display: none;
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        z-index: 99;
+        background-color: rgb(252, 149, 166);
+        border: 2px solid rgb(252, 149, 166); /* สีขอบ Input */
+      }
+
+      #toTopButton i {
+        font-size: 24px;
+      }
+    </style>
+
+    <!-- alert -->
+    <!-- SweetAlert2 CSS -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.min.css"
+    />
+
+    <!-- SweetAlert2 JS -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11.0.18/dist/sweetalert2.all.min.js"></script>
+  </head>
+  <body>
+    <!-- NavBar -->
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <div class="container">
+        <a class="navbar-brand" href="#">Admin</a>
+        <div class="collapse navbar-collapse" id="navbarNav">
+          <ul class="navbar-nav"></ul>
+        </div>
+        <ul class="navbar-nav ml-auto">
+          <li class="nav-item">
+            <a class="nav-link" href="pro.html">
+              <i class="bi-person"></i>
+            </a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="in.html">
+              <i class="fa fa-sign-out"></i> ออกจากระบบ
+            </a>
+          </li>
+        </ul>
+      </div>
+    </nav>
+    <!-- navbar end -->
+
+    <div class="container mt-5 content">
+      <div class="row">
+        <div class="col-md-6">
+          <!------------------- pop up --------------------->
+          <!-- Add a button to trigger the modal -->
+          <button
+            type="button"
+            class="btn btn-success btn-lg"
+            data-bs-toggle="modal"
+            data-bs-target="#drugModal"
+            id="opendrugModal"
+          >
+            <i class="bi bi-plus"></i> เพิ่ม
+          </button>
+        </div>
+
+        <!----------- Modal Add Data-------------->
+        <div
+          class="modal fade"
+          id="drugModal"
+          tabindex="-1"
+          aria-labelledby="drugModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="drugModalLabel">เพิ่มข้อมูล</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+
+              <div class="modal-body">
+                <form>
+                  <div class="row mb-3">
+                    <div class="col-md-3">
+                      <label class="form-label">ไอดี</label>
+                      <input
+                        type="text"
+                        class="form-control"
+                        id="IDbox"
+                        readonly
+                      />
+                    </div>
+                    <div class="col-md-9 ms-auto">
+                      <label class="form-label">ชื่อ</label>
+                      <input class="form-control" type="text" id="Namebox" />
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label class="form-label">จำนวน</label>
+                      <input
+                        class="form-control"
+                        type="number"
+                        aria-
+                        id="Quanbox"
+                      />
+                    </div>
+                    <div class="col-md-6 ms-auto">
+                      <label class="form-label">ราคา</label>
+                      <div class="input-group mb-3">
+                        <input
+                          class="form-control"
+                          type="number"
+                          id="Pricebox"
+                          placeholder="ราคา"
+                        />
+                        <span class="input-group-text">บาท</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label class="form-label">วันที่ผลิต</label>
+                      <input
+                        class="form-control"
+                        type="date"
+                        id="StartDatebox"
+                        min="2020-01-01"
+                        max="2030-12-31"
+                      />
+                    </div>
+                    <div class="col-md-6 ms-auto">
+                      <label class="form-label">วันที่หมดอายุ</label>
+                      <input
+                        class="form-control"
+                        type="date"
+                        id="EndDatebox"
+                        min="2020-01-01"
+                        max="2030-12-31"
+                      />
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-danger rounded-pill"
+                  id="resetAddDataBtn"
+                >
+                  รีเซ็ต
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-custom rounded-pill"
+                  id="addDataBtn"
+                >
+                  ยืนยัน
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!----------- Modal update Data-------------->
+        <div
+          class="modal fade"
+          id="updateModal"
+          tabindex="-1"
+          aria-labelledby="updateModalLabel"
+          aria-hidden="true"
+        >
+          <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="updateModalLabel">แก้ไขข้อมูล</h5>
+                <button
+                  type="button"
+                  class="btn-close"
+                  data-bs-dismiss="modal"
+                  aria-label="Close"
+                ></button>
+              </div>
+              <div class="modal-body">
+                <form id="updateForm">
+                  <div class="row mb-3">
+                    <div class="col-md-3">
+                      <label class="form-label">ไอดี</label>
+                      <input
+                        class="form-control"
+                        type="number"
+                        id="updateRollbox"
+                      />
+                    </div>
+                    <div class="col-md-9 ms-auto">
+                      <label class="form-label">ชื่อ</label>
+                      <input
+                        class="form-control"
+                        type="text"
+                        id="updateNamebox"
+                      />
+                    </div>
+                  </div>
+
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label class="form-label">จำนวน</label>
+                      <input
+                        class="form-control"
+                        type="number"
+                        id="updateQuanbox"
+                      />
+                    </div>
+                    <div class="col-md-6 ms-auto">
+                      <label class="form-label">ราคา</label>
+                      <div class="input-group mb-3">
+                        <input
+                          class="form-control"
+                          type="number"
+                          id="updatePricebox"
+                        />
+                        <span class="input-group-text">บาท</span>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="row mb-3">
+                    <div class="col-md-6">
+                      <label class="form-label">วันที่ผลิต</label>
+                      <input
+                        class="form-control"
+                        type="date"
+                        id="updateStartDatebox"
+                        min="2020-01-01"
+                        max="2030-12-31"
+                      />
+                    </div>
+                    <div class="col-md-6 ms-auto">
+                      <label class="form-label">วันที่หมดอายุ</label>
+                      <input
+                        class="form-control"
+                        type="date"
+                        id="updateEndDatebox"
+                        min="2020-01-01"
+                        max="2030-12-31"
+                      />
+                    </div>
+                  </div>
+                </form>
+              </div>
+
+              <!-- Hidden input field to store the original Roll No -->
+              <input type="hidden" id="originalRollNo" />
+
+              <div class="modal-footer">
+                <button
+                  type="button"
+                  class="btn btn-danger rounded-pill"
+                  id="resetUpdateDataBtn"
+                >
+                  รีเซ็ต
+                </button>
+                <button
+                  type="button"
+                  class="btn btn-primary rounded-pill"
+                  id="updateDataBtn"
+                >
+                  ยืนยัน
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!------------------- pop up --END------------------->
+        <!------------------- Search ------------------->
+        <div class="col-md-6">
+          <div class="input-group">
+            <input
+              class="form-control"
+              type="text"
+              id="searchInput"
+              placeholder="Search..."
+            />
+            <div class="input-group-append">
+              <button class="btn btn-outline-secondary" type="button">
+                <i class="bi bi-search"></i>
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-------------- table show data  ---------------->
+        <div class="mt-3">
+          <table class="table table-hover table-striped" id="table">
+            <thead>
+              <th data-type="numeric">
+                ไอดี
+                <button class="btn btn-link btn-sort" data-column="roll">
+                  <span class="bi bi-caret-down-fill text-white"></span>
+                </button>
+              </th>
+
+              <th data-type="text">
+                ชื่อ
+                <button class="btn btn-link btn-sort" data-column="name">
+                  <span class="bi bi-caret-down-fill text-white"></span>
+                </button>
+              </th>
+
+              <th data-type="date">
+                วันที่ผลิต
+                <button class="btn btn-link btn-sort" data-column="startDate">
+                  <span class="bi bi-caret-down-fill text-white"></span>
+                </button>
+              </th>
+              <th data-type="date">
+                วันที่หมดอายุ
+                <button class="btn btn-link btn-sort" data-column="endDate">
+                  <span class="bi bi-caret-down-fill text-white"></span>
+                </button>
+              </th>
+              <th>
+                <!-- <select id="expirationFilter">
+                  <option value="all">ทั้งหมด</option>
+                  <option value="expired">หมดอายุ</option>
+                  <option value="nearExpired">ใกล้หมดอายุ</option>
+                  <option value="notExpired">ยังไม่หมดอายุ</option>
+                </select> -->
+                <div class="dropdown">
+                  <button
+                    class="btn btn-danger dropdown-toggle"
+                    type="button"
+                    id="expirationFilter"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    สถานะ
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="expirationFilter">
+                    <li>
+                      <button class="dropdown-item" type="button" value="all">
+                        ทั้งหมด
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        class="dropdown-item"
+                        type="button"
+                        value="expired"
+                      >
+                        หมดอายุ
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        class="dropdown-item"
+                        type="button"
+                        value="nearExpired"
+                      >
+                        ใกล้หมดอายุ
+                      </button>
+                    </li>
+                    <li>
+                      <button
+                        class="dropdown-item"
+                        type="button"
+                        value="notExpired"
+                      >
+                        ยังไม่หมดอายุ
+                      </button>
+                    </li>
+                  </ul>
+                </div>
+              </th>
+              <!-- <th data-type="numeric">
+                นับถอยหลัง
+                <button class="btn btn-link btn-sort" data-column="daysRe">
+                  <span class="bi bi-caret-down-fill text-white"></span>
+                </button>
+              </th> -->
+              <th data-type="numeric">
+                จำนวน
+                <button class="btn btn-link btn-sort" data-column="quantity">
+                  <span class="bi bi-caret-down-fill text-white"></span>
+                </button>
+              </th>
+              <th data-type="numeric">
+                ราคา
+                <button class="btn btn-link btn-sort" data-column="price">
+                  <span class="bi bi-caret-down-fill text-white"></span>
+                </button>
+              </th>
+              <th></th>
+              <th></th>
+            </thead>
+            <tbody id="tbody1"></tbody>
+          </table>
+        </div>
+        <!-- table show data END  -->
+      </div>
+    </div>
+    <button
+      id="toTopButton"
+      class="btn btn-primary rounded-circle"
+      title="To the Top"
+    >
+      <i class="bi bi-arrow-up"></i>
+    </button>
+    <footer class="footer">&copy; 2023 My Web Page</footer>
+
+    <!--------------- Start Java -------------------->
+    <script type="module">
+      var tbody = document.getElementById("tbody1");
+
+      // Inside the AddItemToTable function
+      function AddItemToTable(
+        roll,
+        name,
+        startDate,
+        endDate,
+        daysRe,
+        quan,
+        price
+      ) {
+        let trow = document.createElement("tr");
+        let td1 = document.createElement("td"); // Roll No column
+        let td2 = document.createElement("td"); // Name column
+        let td3 = document.createElement("td"); // Start Date
+        let td4 = document.createElement("td"); // End Date
+        let td9 = document.createElement("td"); // daysRemaining
+        let td5 = document.createElement("td"); // Quantity
+        let td6 = document.createElement("td"); // Price
+        let td7 = document.createElement("td"); // Select button
+        let td8 = document.createElement("td"); // Delete button
+
+        //-------- Select button ----------//
+        const editButton = document.createElement("button");
+        editButton.classList.add("btn", "btn-warning", "btn-lg");
+        editButton.innerHTML = '<i class="bi bi-pencil"></i>';
+        editButton.setAttribute("data-bs-toggle", "modal");
+        editButton.setAttribute("data-bs-target", "#updateModal");
+        editButton.dataset.roll = roll;
+        editButton.dataset.name = name;
+        editButton.dataset.start = startDate;
+        editButton.dataset.end = endDate;
+        editButton.dataset.quan = quan;
+        editButton.dataset.price = price;
+
+        //---------- Delete button ------------//
+        const deleteButton = document.createElement("button");
+        deleteButton.classList.add("btn", "btn-danger", "btn-lg");
+        deleteButton.innerHTML = '<i class="bi bi-trash"></i>';
+        deleteButton.dataset.roll = roll;
+
+        // Set content for other <td> elements
+        td1.innerHTML = roll;
+        td2.innerHTML = name;
+        td3.innerHTML = startDate;
+        td4.innerHTML = endDate;
+        td5.innerHTML = quan;
+        td6.innerHTML = price;
+        td7.appendChild(editButton);
+        td8.appendChild(deleteButton);
+
+        // Set ID box value here
+        document.getElementById("IDbox").value = roll;
+
+        //-------- Calculate "Days Remaining" Status ----------//
+        let isExpired = false;
+        const currentDate = new Date(); //วันปัจจุบัน
+        const end = new Date(endDate);
+
+        if (end <= currentDate) {
+          isExpired = true;
+        }
+
+        // ตรวจสอบค่า isExpired และกำหนดข้อความตามเงื่อนไข
+        let countDownText = "";
+
+        if (isExpired) {
+          countDownText = `<div class="d-inline p-2 bg-danger text-white rounded">หมดอายุแล้ว</div>`;
+        } else if (daysRe >= 1 && daysRe <= 30) {
+          countDownText = `<div class="d-inline p-2 bg-warning text-white rounded">อีก ${daysRe} วัน หมดอายุ</div>`;
+        }
+
+        td9.innerHTML = countDownText;
+
+        //-------- Calculate "Days Remaining" Status END ----------//
+
+        // Append all <td> elements to the row
+        trow.appendChild(td1);
+        trow.appendChild(td2);
+        trow.appendChild(td3);
+        trow.appendChild(td4);
+        trow.appendChild(td9);
+        trow.appendChild(td5);
+        trow.appendChild(td6);
+        trow.appendChild(td7);
+        trow.appendChild(td8);
+
+        // Append the row to the table body
+        tbody.appendChild(trow);
+
+        // Add event listener to the Select button
+        editButton.addEventListener("click", () => {
+          const selectedRoll = editButton.dataset.roll;
+          const selectedName = editButton.dataset.name;
+          const selectedStartDate = editButton.dataset.start;
+          const selectedEndDate = editButton.dataset.end;
+          const selectedQuan = editButton.dataset.quan;
+          const selectedPrice = editButton.dataset.price;
+
+          // Set the values in the update modal
+          document.getElementById("updateRollbox").value = selectedRoll;
+          document.getElementById("updateNamebox").value = selectedName;
+          document.getElementById("updateStartDatebox").value =
+            selectedStartDate;
+          document.getElementById("updateEndDatebox").value = selectedEndDate;
+          document.getElementById("updateQuanbox").value = selectedQuan;
+          document.getElementById("updatePricebox").value = selectedPrice;
+
+          // Store the original Roll No in the hidden input field
+          document.getElementById("originalRollNo").value = selectedRoll;
+
+          // Show the update modal
+          updateModal.show();
+        });
+
+        // Add event listener to the Delete button
+        deleteButton.addEventListener("click", () => {
+          deleteDrug(roll);
+        });
+      }
+
+      function AddAllItemsToTable(TheDrug) {
+        tbody.innerHTML = "";
+
+        // เรียงลำดับข้อมูลใหม่ตาม Roll No ก่อน
+        TheDrug.sort((a, b) => a.RollNo - b.RollNo);
+
+        TheDrug.forEach((element) => {
+          AddItemToTable(
+            element.RollNo,
+            element.NameDrug,
+            element.StartDate,
+            element.EndDate,
+            element.DaysRemain,
+            element.Quantity,
+            element.Price
+          );
+        });
+        // ใส่โค้ดนี้ไว้หลังจากสร้างตารางและเรียกฟังก์ชัน AddAllItemsToTable
+        const expirationFilter = document.getElementById("expirationFilter");
+
+        expirationFilter.addEventListener("change", () => {
+          const selectedValue = expirationFilter.value;
+
+          // เลือกทุกแถวของตาราง
+          const rows = document.querySelectorAll("table tbody tr");
+
+          // วนลูปผ่านแถวทั้งหมดในตาราง
+          rows.forEach((row) => {
+            // เลือก cell ที่เก็บสถานะ
+            const statusCell = row.querySelector("td:nth-child(5)");
+
+            // ตรวจสอบสถานะและแสดงหรือซ่อนแถวตามค่าที่ถูกเลือก
+            if (selectedValue === "all") {
+              row.style.display = "table-row"; // แสดงทั้งหมด
+            } else if (
+              selectedValue === "notExpired" &&
+              !statusCell.innerText.includes("หมดอายุ")
+            ) {
+              row.style.display = "table-row"; // แสดงไม่หมดอายุ
+            } else if (
+              selectedValue === "nearExpired" &&
+              statusCell.innerText.includes("อีก") &&
+              !statusCell.innerText.includes("หมดอายุ")
+            ) {
+              row.style.display = "table-row"; // แสดงใกล้หมดอายุ
+            } else if (
+              selectedValue === "expired" &&
+              statusCell.innerText.includes("หมดอายุ")
+            ) {
+              row.style.display = "table-row"; // แสดงหมดอายุ
+            } else {
+              row.style.display = "none"; // ซ่อนแถวที่ไม่ตรงกับสถานะที่เลือก
+            }
+          });
+        });
+      }
+
+      //-------------------search-----------------------------//
+      // Add an event listener to the search input
+      const searchInput = document.getElementById("searchInput");
+
+      searchInput.addEventListener("input", () => {
+        const searchTerm = searchInput.value.trim().toLowerCase();
+        filterTableData(searchTerm);
+      });
+
+      // Function to filter and update the table based on search term
+      function filterTableData(searchTerm) {
+        const rows = tbody.getElementsByTagName("tr");
+
+        for (const row of rows) {
+          const columns = row.getElementsByTagName("td");
+          let shouldDisplay = false;
+
+          for (const column of columns) {
+            if (column.textContent.toLowerCase().includes(searchTerm)) {
+              shouldDisplay = true;
+              break;
+            }
+          }
+
+          row.style.display = shouldDisplay ? "" : "none";
+        }
+      }
+      // ------------------------search--END-----------------------------------//
+
+      //---------- sort --------------//
+      const sortButtons = document.querySelectorAll(".btn-sort");
+      let sortColumn = null;
+      let sortAscending = true;
+
+      // Sort function for different data types
+      function sortTableData(columnIndex) {
+        const rows = Array.from(tbody.getElementsByTagName("tr"));
+
+        rows.sort((a, b) => {
+          const dataType = a.parentNode.parentNode
+            .getElementsByTagName("th")
+            [columnIndex].getAttribute("data-type");
+          const textA = a.children[columnIndex].textContent;
+          const textB = b.children[columnIndex].textContent;
+
+          if (dataType === "numeric") {
+            const numA = parseFloat(textA);
+            const numB = parseFloat(textB);
+            return numA - numB;
+          } else if (dataType === "date") {
+            const dateA = new Date(textA);
+            const dateB = new Date(textB);
+            return dateA - dateB;
+          } else {
+            return textA.localeCompare(textB);
+          }
+        });
+
+        if (!sortAscending) {
+          rows.reverse();
+        }
+
+        // Remove sorting classes from all sort buttons and icons
+        sortButtons.forEach((button) => {
+          button.classList.remove("sorted-asc", "sorted-desc");
+          button
+            .querySelector(".bi")
+            .classList.remove("bi-caret-down", "bi-caret-up");
+        });
+
+        const currentButton = sortButtons[columnIndex];
+        const sortIcon = currentButton.querySelector(".bi");
+        if (sortAscending) {
+          currentButton.classList.add("sorted-asc");
+          sortIcon.classList.add("bi-caret-down");
+          sortIcon.classList.remove("bi-caret-up");
+        } else {
+          currentButton.classList.add("sorted-desc");
+          sortIcon.classList.add("bi-caret-up");
+          sortIcon.classList.remove("bi-caret-down");
+        }
+
+        tbody.innerHTML = "";
+        rows.forEach((row) => {
+          tbody.appendChild(row);
+        });
+
+        sortAscending = !sortAscending;
+      }
+
+      sortButtons.forEach((button, index) => {
+        button.addEventListener("click", () => {
+          sortColumn = index;
+          sortTableData(index);
+        });
+      });
+
+      //--------------Sort--END------------------//
+
+      //----------To The Top---------//
+      // เมื่อเลื่อนหน้าเว็บ
+      window.addEventListener("scroll", function () {
+        if (
+          document.body.scrollTop > 20 ||
+          document.documentElement.scrollTop > 20
+        ) {
+          document.getElementById("toTopButton").style.display = "block";
+        } else {
+          document.getElementById("toTopButton").style.display = "none";
+        }
+      });
+
+      // เมื่อคลิกที่ปุ่ม "To the Top"
+      document
+        .getElementById("toTopButton")
+        .addEventListener("click", function () {
+          document.body.scrollTop = 0; // สำหรับ Safari
+          document.documentElement.scrollTop = 0; // สำหรับ Chrome, Firefox, IE และ Opera
+        });
+
+      //-------------จบ To the top-----------------//
+
+      //------------- Firebase ------------- //
+      import { initializeApp } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-app.js";
+
+      const firebaseConfig = {
+        apiKey: "AIzaSyB_uu_O-n9A_VRFKXgGqGswe1gaYlN4IJM",
+        authDomain: "fire-dc65c.firebaseapp.com",
+        projectId: "fire-dc65c",
+        storageBucket: "fire-dc65c.appspot.com",
+        messagingSenderId: "822125875502",
+        appId: "1:822125875502:web:7bced492d3c84af9afeabf",
+        measurementId: "G-7HDZK184NG",
+      };
+
+      // Initialize Firebase
+      const app = initializeApp(firebaseConfig);
+      //const analytics = getAnalytics(app);
+
+      import {
+        getFirestore,
+        doc,
+        getDoc,
+        getDocs,
+        setDoc,
+        collection,
+        addDoc,
+        updateDoc,
+        deleteDoc,
+        deleteField,
+        onSnapshot,
+      } from "https://www.gstatic.com/firebasejs/10.1.0/firebase-firestore.js";
+
+      const db = getFirestore();
+
+      //--- Reference Add ---//
+
+      let NameBox = document.getElementById("Namebox");
+      let StartDateBox = document.getElementById("StartDatebox");
+      let EndDateBox = document.getElementById("EndDatebox");
+      let QuanBox = document.getElementById("Quanbox");
+      let PriceBox = document.getElementById("Pricebox");
+      let addDataBtn = document.getElementById("addDataBtn");
+
+      //--- adding document ---//
+      async function AddDocument() {
+        const ref = collection(db, "TheDrugsList");
+
+        // แปลงค่า StartDate และ EndDate เป็นวัตถุ Date
+        const startDate = new Date(StartDateBox.value);
+        const endDate = new Date(EndDateBox.value);
+
+        // เพิ่มเงื่อนไขเพื่อตรวจสอบว่า "วันที่ผลิต" ไม่มากกว่า "วันที่หมดอายุ"
+        if (startDate > endDate) {
+          Swal.fire({
+            icon: "error",
+            title: "วันที่ผลิตต้องไม่มากกว่าวันที่หมดอายุ",
+          });
+          return;
+        }
+
+        try {
+          // Query Firestore to get the highest RollNo
+          const querySnapshot = await getDocs(collection(db, "TheDrugsList"));
+          const rollNumbers = querySnapshot.docs.map(
+            (doc) => doc.data().RollNo
+          );
+
+          // Find the highest RollNo and increment it by 1
+          const highestRollNo = Math.max(...rollNumbers);
+          const newRollNo = highestRollNo + 1;
+
+          // Calculate daysRe
+          const ONE_DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
+          const productionDate = new Date(StartDateBox.value);
+          const expiryDate = new Date(EndDateBox.value);
+          const timeDifference =
+            expiryDate.getTime() - productionDate.getTime();
+          const daysRe = Math.ceil(timeDifference / ONE_DAY_IN_MILLISECONDS);
+
+          const docRef = doc(ref, newRollNo.toString()); // Convert the newRollNo to string
+
+          await setDoc(docRef, {
+            RollNo: newRollNo,
+            NameDrug: NameBox.value,
+            StartDate: StartDateBox.value,
+            EndDate: EndDateBox.value,
+            DaysRemain: daysRe,
+            Quantity: QuanBox.value,
+            Price: PriceBox.value,
+          });
+
+          // เพิ่มเรียกใช้ updateDaysRemaining เพื่ออัปเดตค่า DaysRemain
+          await updateDaysRemaining(
+            newRollNo.toString(),
+            StartDateBox.value,
+            EndDateBox.value
+          );
+
+          console.log(
+            "Document with RollNo " + newRollNo + " added successfully!"
+          );
+
+          // Close the modal after adding data
+          $("#drugModal").modal("hide"); // Close the modal using jQuery
+
+          Swal.fire({
+            icon: "success",
+            title: "Data added successfully!",
+            showConfirmButton: false,
+            timer: 2000, // Auto close after 3 seconds
+          });
+          NameBox.value = "";
+          StartDateBox.value = "";
+          EndDateBox.value = "";
+          QuanBox.value = "";
+          PriceBox.value = "";
+          IDbox.value = "";
+
+          GetAllDataRealtime();
+        } catch (error) {
+          console.error("Unsuccessful operation, error: " + error);
+          Swal.fire({
+            icon: "error",
+            title: "Failed to add document.",
+          });
+        }
+      }
+
+      //-----------------------------popup ADD-----------------------------------//
+      const drugModal = new bootstrap.Modal(
+        document.getElementById("drugModal")
+      );
+      document.getElementById("opendrugModal").addEventListener("click", () => {
+        // เรียกใช้งาน Modal เมื่อคลิกปุ่ม "Add"
+        drugModal.show();
+      });
+
+      // Open the modal when the "Add" button is clicked
+      addDataBtn.addEventListener("click", () => {
+        var nameValue = document.getElementById("Namebox").value;
+        var quantityValue = document.getElementById("Quanbox").value;
+        var startDateValue = document.getElementById("StartDatebox").value;
+        var endDateValue = document.getElementById("EndDatebox").value;
+        var priceValue = document.getElementById("Pricebox").value;
+        var missingFields = []; // สร้างอาร์เรย์เพื่อเก็บชื่อฟิลด์ที่ขาดหายไป
+
+        if (!nameValue) {
+          missingFields.push("ชื่อ");
+        }
+
+        if (!quantityValue) {
+          missingFields.push("จำนวน");
+        }
+
+        if (!startDateValue) {
+          missingFields.push("วันที่ผลิต");
+        }
+
+        if (!endDateValue) {
+          missingFields.push("วันที่หมดอายุ");
+        }
+
+        if (!priceValue) {
+          missingFields.push("ราคา");
+        }
+
+        if (missingFields.length > 0) {
+          var missingFieldsMessage =
+            "กรุณากรอกข้อมูลให้ครบถ้วนดังนี้<br>" + missingFields.join("<br>");
+          Swal.fire({
+            icon: "error",
+            title: "ข้อมูลไม่ครบถ้วน",
+            html: missingFieldsMessage,
+          });
+
+          return false; // ยกเลิกการส่งฟอร์ม
+        } else {
+          AddDocument()
+            .then(() => {
+              NameBox.value = "";
+              StartDateBox.value = "";
+              EndDateBox.value = "";
+              QuanBox.value = "";
+              PriceBox.value = "";
+              IDbox.value = "";
+              drugModal.hide();
+              GetAllDataRealtime(); // Refresh the table to show the new data
+            })
+            .catch((error) => {
+              console.error("Error adding data:", error);
+              Swal.fire({
+                icon: "error",
+                title: "Failed to add data!",
+                showConfirmButton: false,
+                timer: 2000, // Auto close after 3 seconds
+              });
+            });
+        }
+      });
+
+      //---Getting document---//
+
+      async function GetADocument(docId) {
+        var ref = doc(db, "TheDrugsList", docId);
+        const docSnap = await getDoc(ref);
+
+        if (docSnap.exists()) {
+          NameBox.value = docSnap.data().NameDrug;
+          StartDateBox.value = docSnap.data().StartDate;
+          EndDateBox.value = docSnap.data().EndDate;
+          daysRe = docSnap.data().DaysRemain;
+          QuanBox.value = docSnap.data().Quantity;
+          PriceBox.value = docSnap.data().Price;
+        } else {
+          alert("No such Document");
+        }
+      }
+
+      //--------------Update------------------------//
+      // Get references to the update form and its elements
+      const updateModal = new bootstrap.Modal(
+        document.getElementById("updateModal")
+      );
+      const updateRollbox = document.getElementById("updateRollbox");
+      const updateNamebox = document.getElementById("updateNamebox");
+      const updateStartDatebox = document.getElementById("updateStartDatebox");
+      const updateEndDatebox = document.getElementById("updateEndDatebox");
+      const updateQuanbox = document.getElementById("updateQuanbox");
+      const updatePricebox = document.getElementById("updatePricebox");
+
+      const updateDataBtn = document.getElementById("updateDataBtn");
+
+      function openUpdateModal(
+        selectedRoll,
+        name,
+        startDate,
+        endDate,
+        quan,
+        price
+      ) {
+        updateRollbox.value = selectedRoll;
+        updateNamebox.value = name;
+        updateStartDatebox.value = startDate;
+        updateEndDatebox.value = endDate;
+        updateQuanbox.value = quan;
+        updatePricebox.value = price;
+
+        // Show the update modal
+        updateModal.show();
+      }
+
+      // Handle the "Update Data" button click
+      updateDataBtn.addEventListener("click", async () => {
+        const updatedRoll = document.getElementById("updateRollbox").value;
+        const updatedName = document.getElementById("updateNamebox").value;
+        const updatedQuan = document.getElementById("updateQuanbox").value;
+        const updatedStartDate =
+          document.getElementById("updateStartDatebox").value;
+        const updatedEndDate =
+          document.getElementById("updateEndDatebox").value;
+        const updatePrice = document.getElementById("updatePricebox").value;
+        const originalRollNo = document.getElementById("originalRollNo").value;
+
+        if (
+          !updatedRoll ||
+          !updatedName ||
+          !updatedQuan ||
+          !updatedStartDate ||
+          !updatedEndDate ||
+          !updatePrice
+        ) {
+          Swal.fire({
+            icon: "error",
+            title: "กรุณากรอกข้อมูลให้ครบถ้วน",
+          });
+          return;
+        }
+
+        // Call the updateData function with the original RollNo
+        await updateData(
+          originalRollNo,
+          updatedRoll,
+          updatedName,
+          updatedQuan,
+          updatedStartDate,
+          updatedEndDate,
+          updatePrice
+        );
+
+        updateModal.hide(); // Close the modal upon successful update
+      });
+
+      // --- Update document --- //
+      async function updateData(
+        docId,
+        updatedRoll,
+        updatedName,
+        updatedQuan,
+        updatedStartDate,
+        updatedEndDate,
+        updatePrice
+      ) {
+        console.log("Updating data for document with ID:", docId);
+        const docRef = doc(db, "TheDrugsList", docId);
+
+        // แปลงค่า StartDate และ EndDate เป็นวัตถุ Date
+        const startDate = new Date(updatedStartDate);
+        const endDate = new Date(updatedEndDate);
+
+        // เพิ่มเงื่อนไขเพื่อตรวจสอบว่า "วันที่ผลิต" ไม่มากกว่า "วันที่หมดอายุ"
+        if (startDate > endDate) {
+          Swal.fire({
+            icon: "error",
+            title: "วันที่ผลิตต้องไม่มากกว่าวันที่หมดอายุ",
+          });
+          return;
+        }
+
+        try {
+          GetAllDataRealtime;
+          const docSnapshot = await getDoc(docRef);
+
+          if (docSnapshot.exists()) {
+            await updateDoc(docRef, {
+              RollNo: updatedRoll,
+              NameDrug: updatedName,
+              StartDate: updatedStartDate,
+              EndDate: updatedEndDate,
+              Quantity: updatedQuan,
+              Price: updatePrice,
+            });
+
+            // เพิ่มเรียกใช้ updateDaysRemaining เพื่ออัปเดตค่า DaysRemain
+            await updateDaysRemaining(docId, updatedStartDate, updatedEndDate);
+
+            console.log("Document updated successfully");
+            Swal.fire({
+              icon: "success",
+              title: "Data updated!",
+              showConfirmButton: false,
+              timer: 2000,
+            });
+            GetAllDataRealtime();
+          } else {
+            console.error("Document does not exist with ID:", docId);
+
+            Swal.fire({
+              icon: "error",
+              title: "Failed to update data: Document not found.",
+              showConfirmButton: false,
+              timer: 2000,
+            });
+          }
+        } catch (error) {
+          console.error("Error updating Data:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Failed to update data.",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        }
+      }
+      // อัปเดตค่า daysRe ใน Firebase Firestore
+      async function updateDaysRemaining(docId, newStartDate, newEndDate) {
+        const docRef = doc(db, "TheDrugsList", docId);
+
+        const ONE_DAY_IN_MILLISECONDS = 24 * 60 * 60 * 1000;
+        const startDate = new Date(newStartDate);
+        const endDate = new Date(newEndDate);
+        const timeDifference = endDate.getTime() - startDate.getTime();
+        const newDaysRe = Math.ceil(timeDifference / ONE_DAY_IN_MILLISECONDS);
+
+        try {
+          await updateDoc(docRef, {
+            DaysRemain: newDaysRe,
+          });
+          console.log("DaysRemain updated successfully!");
+        } catch (error) {
+          console.error("Error updating DaysRemain:", error);
+        }
+      }
+
+      //-----------------Delete Document--------------//
+      async function deleteDrug(roll) {
+        const { value: confirmed } = await Swal.fire({
+          title: "แน่ใจแล้ว?",
+          text: "คุณต้องการลบข้อมูลนี้ใช่ไหม?",
+          icon: "warning",
+          showCancelButton: true,
+          confirmButtonText: "ใช่จ้า ลบเลย",
+          cancelButtonText: "ไม่ใช่จ้า ยกเลิก",
+        });
+
+        if (!confirmed) {
+          return; // Exit the function if not confirmed
+        }
+
+        const rollString = String(roll).trim(); // Ensure roll is treated as a string and trim whitespace
+
+        if (!rollString || rollString === "") {
+          Swal.fire({
+            icon: "error",
+            title: "Invalid or empty Roll No.",
+            text: "Cannot delete data.",
+          });
+          return;
+        }
+
+        const drugRef = doc(db, "TheDrugsList", rollString);
+
+        try {
+          await deleteDoc(drugRef);
+          Swal.fire({
+            title: "ลบข้อมูลเรียบร้อย!",
+            icon: "success",
+            showConfirmButton: false,
+            timer: 2000,
+          });
+        } catch (error) {
+          console.error("Error deleting data:", error);
+          Swal.fire({
+            icon: "error",
+            title: "Failed to delete data.",
+          });
+        }
+      }
+      //--------------- ปุ่ม Reset ----------//
+      // ฟังก์ชันรีเซ็ตข้อมูลในฟอร์ม "เพิ่มข้อมูล"
+      function resetAddDataForm() {
+        document.getElementById("Namebox").value = "";
+        document.getElementById("Quanbox").value = "";
+        document.getElementById("StartDatebox").value = "";
+        document.getElementById("EndDatebox").value = "";
+        document.getElementById("Pricebox").value = "";
+      }
+
+      // ฟังก์ชันรีเซ็ตข้อมูลในฟอร์ม "แก้ไขข้อมูล"
+      function resetUpdateDataForm() {
+        document.getElementById("updateRollbox").value = "";
+        document.getElementById("updateNamebox").value = "";
+        document.getElementById("updateQuanbox").value = "";
+        document.getElementById("updateStartDatebox").value = "";
+        document.getElementById("updateEndDatebox").value = "";
+        document.getElementById("updatePricebox").value = "";
+      }
+
+      // เพิ่มการเรียกใช้งานฟังก์ชันรีเซ็ตเมื่อคลิกปุ่ม "รีเซ็ต" ใน Modal Add Data
+      document
+        .getElementById("resetAddDataBtn")
+        .addEventListener("click", function () {
+          resetAddDataForm();
+        });
+
+      // เพิ่มการเรียกใช้งานฟังก์ชันรีเซ็ตเมื่อคลิกปุ่ม "รีเซ็ต" ใน Modal Update Data
+      document
+        .getElementById("resetUpdateDataBtn")
+        .addEventListener("click", function () {
+          resetUpdateDataForm();
+        });
+      //-----------------ปุ่ม Reset---End-------------------------//
+
+      //------- get All data for table realtime ----------//
+      async function GetAllDataRealtime() {
+        const dbRef = collection(db, "TheDrugsList");
+
+        onSnapshot(dbRef, (querySnapshot) => {
+          var drugs = [];
+
+          querySnapshot.forEach((doc) => {
+            drugs.push(doc.data());
+          });
+          AddAllItemsToTable(drugs);
+        });
+      }
+
+      window.onload = function () {
+        GetAllDataRealtime();
+
+        // Inside the window.onload function
+        tbody.addEventListener("click", (event) => {
+          if (event.target.classList.contains("btn-select")) {
+            const roll = event.target.dataset.roll;
+            const name = event.target.dataset.name;
+            const startDate = event.target.dataset.start;
+            const endDate = event.target.dataset.end;
+            const quan = event.target.dataset.quan;
+            const price = event.target.dataset.price;
+
+            openUpdateModal(roll, name, startDate, endDate, quan, price);
+          }
+        });
+      };
+    </script>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+  </body>
+</html>

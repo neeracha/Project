@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- Your head content here -->
+</head>
+<body>
+
+<!-- Your profile page content here -->
+
+<!-- Sign Out Button -->
+<div class="text-center mt-3">
+  <button class="btn btn-danger" onclick="signOut()">Sign Out</button>
+</div>
+
+<!-- Your scripts and other content here -->
+
+<script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/9.0.2/firebase-auth.js"></script>
+<script>
+  // Initialize Firebase
+  const firebaseConfig = {
+    // Your Firebase config here
+  };
+  firebase.initializeApp(firebaseConfig);
+
+  // Sign Out Function
+  function signOut() {
+    firebase.auth().signOut().then(() => {
+      // Sign-out successful.
+      window.location.href = "in.html"; // Redirect to sign-in page
+    }).catch((error) => {
+      // An error happened.
+      console.error(error);
+    });
+  }
+</script>
+</body>
+</html>
